@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="19529" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="BYZ-38-t0r">
+    <device id="retina6_1" orientation="portrait" appearance="light"/>
+    <dependencies>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="19519"/>
+        <capability name="Image references" minToolsVersion="12.0"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="System colors in document resources" minToolsVersion="11.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <scenes>
+        <!--HomeVC-->
+        <scene sceneID="tne-QT-ifu">
+            <objects>
+                <viewController id="BYZ-38-t0r" customClass="HomeVC" customModule="MapKitDemo" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="8bC-Xf-vdC">
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="10" translatesAutoresizingMaskIntoConstraints="NO" id="aG6-1G-hAG">
+                                <rect key="frame" x="0.0" y="44" width="414" height="818"/>
+                                <subviews>
+                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="DUn-cN-mgQ">
+                                        <rect key="frame" x="0.0" y="0.0" width="414" height="120"/>
+                                        <subviews>
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Address" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="4xP-Es-Qdl">
+                                                <rect key="frame" x="10" y="10" width="394" height="30"/>
+                                                <color key="backgroundColor" red="0.78039215689999997" green="0.70493019826318404" blue="0.56859524700484021" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                <fontDescription key="fontDescription" type="system" pointSize="25"/>
+                                                <nil key="textColor"/>
+                                                <nil key="highlightedColor"/>
+                                            </label>
+                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="GWr-kj-Du0">
+                                                <rect key="frame" x="361" y="50" width="45" height="31"/>
+                                                <color key="tintColor" systemColor="labelColor"/>
+                                                <state key="normal" title="Button"/>
+                                                <buttonConfiguration key="configuration" style="plain">
+                                                    <imageReference key="image" image="multiply.circle" catalog="system" symbolScale="large"/>
+                                                    <preferredSymbolConfiguration key="preferredSymbolConfigurationForImage"/>
+                                                </buttonConfiguration>
+                                                <connections>
+                                                    <action selector="closeViewBtnAction:" destination="BYZ-38-t0r" eventType="touchUpInside" id="2eS-ib-Elt"/>
+                                                </connections>
+                                            </button>
+                                        </subviews>
+                                        <color key="backgroundColor" red="0.80272794800000002" green="1" blue="0.78489865319999996" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                        <constraints>
+                                            <constraint firstItem="4xP-Es-Qdl" firstAttribute="top" secondItem="DUn-cN-mgQ" secondAttribute="top" constant="10" id="Ftl-B7-lsC"/>
+                                            <constraint firstAttribute="trailing" secondItem="4xP-Es-Qdl" secondAttribute="trailing" constant="10" id="Gfk-az-aT8"/>
+                                            <constraint firstAttribute="bottom" relation="greaterThanOrEqual" secondItem="GWr-kj-Du0" secondAttribute="bottom" constant="5" id="NTj-rQ-v6W"/>
+                                            <constraint firstItem="4xP-Es-Qdl" firstAttribute="leading" secondItem="DUn-cN-mgQ" secondAttribute="leading" constant="10" id="f2T-mf-1dy"/>
+                                            <constraint firstAttribute="height" constant="120" id="fgr-1i-UrC"/>
+                                            <constraint firstItem="GWr-kj-Du0" firstAttribute="top" secondItem="4xP-Es-Qdl" secondAttribute="bottom" constant="10" id="lHN-HP-36y"/>
+                                            <constraint firstAttribute="trailing" secondItem="GWr-kj-Du0" secondAttribute="trailing" constant="8" id="ry7-Jz-FfK"/>
+                                        </constraints>
+                                    </view>
+                                    <mapView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" mapType="standard" translatesAutoresizingMaskIntoConstraints="NO" id="MV8-rf-eje">
+                                        <rect key="frame" x="0.0" y="130" width="414" height="688"/>
+                                        <connections>
+                                            <outlet property="delegate" destination="BYZ-38-t0r" id="avX-YY-t1S"/>
+                                        </connections>
+                                    </mapView>
+                                </subviews>
+                            </stackView>
+                        </subviews>
+                        <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                        <constraints>
+                            <constraint firstItem="aG6-1G-hAG" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" id="7fG-Px-Exm"/>
+                            <constraint firstItem="aG6-1G-hAG" firstAttribute="bottom" secondItem="6Tk-OE-BBY" secondAttribute="bottom" id="QLL-xb-zvf"/>
+                            <constraint firstItem="aG6-1G-hAG" firstAttribute="trailing" secondItem="6Tk-OE-BBY" secondAttribute="trailing" id="Ze0-To-tO7"/>
+                            <constraint firstItem="aG6-1G-hAG" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" id="rDZ-sO-rSb"/>
+                        </constraints>
+                    </view>
+                    <connections>
+                        <outlet property="addressView" destination="DUn-cN-mgQ" id="TJz-uh-sVu"/>
+                        <outlet property="lblAddress" destination="4xP-Es-Qdl" id="Y2h-ar-qUN"/>
+                        <outlet property="mapView" destination="MV8-rf-eje" id="ZPC-IB-6Ya"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-13.043478260869566" y="49.553571428571423"/>
+        </scene>
+    </scenes>
+    <resources>
+        <image name="multiply.circle" catalog="system" width="128" height="121"/>
+        <systemColor name="labelColor">
+            <color white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+        </systemColor>
+        <systemColor name="systemBackgroundColor">
+            <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+        </systemColor>
+    </resources>
+</document>
