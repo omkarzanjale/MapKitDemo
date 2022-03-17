@@ -14,10 +14,15 @@ class HomeVC: UIViewController {
     @IBOutlet weak var mapView: MKMapView!
     @IBOutlet weak var lblAddress: UILabel!
     @IBOutlet weak var detailView: UIView!
+    @IBOutlet weak var titleSubtitleView: UIView!
+    @IBOutlet weak var pin: UIImageView!
+    @IBOutlet weak var lblPinTitle: UILabel!
+    @IBOutlet weak var lblPinSubtitle: UILabel!
     @IBOutlet weak var searchBar: UISearchBar!
     lazy var locationManager = CLLocationManager()
     lazy var currentLocation = CLLocationCoordinate2D()
     var isSerachBtnClicked = false
+    var isPinTapped = false
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -26,10 +31,16 @@ class HomeVC: UIViewController {
     
     private func config() {
         self.detailView.isHidden = true
+        self.titleSubtitleView.isHidden = true
         self.searchBar.isHidden = true
         mapView.delegate = self
+        //Map tap gesture
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(tapGestureAction))
         self.mapView.addGestureRecognizer(tapGesture)
+        //Pin tap gesture
+        pin.isUserInteractionEnabled = true
+        pin.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(pinTapped)))
+        
         locationManager.delegate = self
         locationManager.desiredAccuracy = kCLLocationAccuracyBest
         locationManager.requestAlwaysAuthorization()
@@ -61,11 +72,12 @@ class HomeVC: UIViewController {
         self.setPinUsingMKPointAnnotation(location: coordinatesOnMap)
     }
     
-    private func removePreviousPin() {
-        if mapView.annotations.isEmpty == false {
-            for annotation in mapView.annotations {
-                self.mapView.removeAnnotation(annotation)
-            }
+    @objc private func pinTapped(_ recognizer: UITapGestureRecognizer) {
+        self.isPinTapped = !isPinTapped
+        if isPinTapped {
+            self.titleSubtitleView.isHidden = false
+        }else {
+            self.titleSubtitleView.isHidden = true
         }
     }
     //
@@ -77,10 +89,7 @@ class HomeVC: UIViewController {
         geoCoder.reverseGeocodeLocation(location, completionHandler:
                                             { placemarks, error -> Void in
             guard let placeMark = placemarks?.first else { return }
-            guard let city = placeMark.subAdministrativeArea  else {return}
-            guard let zip = placeMark.isoCountryCode else {return}
-            guard let country = placeMark.country  else {return}
-            let address = Address(placeMark: placeMark.name ?? "-", country: country, city: city, zipCode: zip)
+            let address = Address(placeMark: placeMark.name ?? "-", country: placeMark.country ?? "-", city: placeMark.subAdministrativeArea ?? "-", zipCode: placeMark.isoCountryCode ?? "-")
             complisherHandler(address)
         })
     }
@@ -89,21 +98,18 @@ class HomeVC: UIViewController {
 //MARK: MKMapViewDelegate
 //
 extension HomeVC: MKMapViewDelegate {
-    
-    func mapView(_ mapView: MKMapView, annotationView view: MKAnnotationView, didChange newState: MKAnnotationView.DragState, fromOldState oldState: MKAnnotationView.DragState) {
-        if newState == MKAnnotationView.DragState.ending {
-            guard let location = view.annotation?.coordinate else {return}
-            self.setPinUsingMKPointAnnotation(location: location)
+
+    func mapView(_ mapView: MKMapView, regionDidChangeAnimated animated: Bool) {
+        let center = mapView.centerCoordinate
+        let queue1 = DispatchQueue.global(qos: .background)
+        queue1.async {
+            self.getAddress(coordnates: center) { address in
+                self.detailView.isHidden = false
+                self.lblAddress.text = address.fullAddress
+                self.lblPinTitle.text = address.placeMark
+                self.lblPinSubtitle.text = address.city
+            }
         }
-    }
-    
-    func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView? {
-        if annotation is MKUserLocation { return nil }
-        let annotationView = MKAnnotationView(annotation: annotation, reuseIdentifier: "CustomAnnootation")
-        annotationView.image = UIImage(named: "Pin")
-        annotationView.isDraggable = true
-        annotationView.canShowCallout = true
-        return annotationView
     }
     
     func mapView(_ mapView: MKMapView, didSelect view: MKAnnotationView) {
@@ -119,22 +125,12 @@ extension HomeVC: CLLocationManagerDelegate {
         if let location = locations.last{
             let center = CLLocationCoordinate2D(latitude: location.coordinate.latitude, longitude: location.coordinate.longitude)
             self.currentLocation = center
-            
         }
     }
 }
 
 extension HomeVC {
     //MARK: Set Pin
-    //Add pin using MKPlacemark(Unused)
-    func setPinUsingMKPlacemark(location: CLLocationCoordinate2D) {
-        let pin = MKPlacemark(coordinate: location)
-        let coordinateRegion = MKCoordinateRegion(center: pin.coordinate, latitudinalMeters: 8000, longitudinalMeters: 8000)
-        mapView.addAnnotation(pin)
-        mapView.setRegion(coordinateRegion, animated: true)
-    }
-    
-    //Add pin using MKPointAnnotation
     func setPinUsingMKPointAnnotation(location: CLLocationCoordinate2D){
         self.detailView.isHidden = false
         if isSerachBtnClicked{
@@ -143,16 +139,17 @@ extension HomeVC {
             self.searchBar.isHidden = true
         }
         self.lblAddress.isHidden = false
-        self.removePreviousPin()
         self.getAddress(coordnates: location) { address in
             self.lblAddress.text = address.fullAddress
-            let annotation = MKPointAnnotation()
-            annotation.coordinate = location
-            annotation.title = address.placeMark
-            annotation.subtitle = address.city
-            let coordinateRegion = MKCoordinateRegion(center: annotation.coordinate, latitudinalMeters: 10000, longitudinalMeters: 10000)
+            self.lblPinTitle.text = address.placeMark
+            self.lblPinSubtitle.text = address.city
+//            let annotation = MKPointAnnotation()
+//            annotation.coordinate = location
+//            annotation.title = address.placeMark
+//            annotation.subtitle = address.city
+            let coordinateRegion = MKCoordinateRegion(center: location, latitudinalMeters: 800, longitudinalMeters: 800)
             self.mapView.setRegion(coordinateRegion, animated: true)
-            self.mapView.addAnnotation(annotation)
+            //self.mapView.addAnnotation(annotation)
         }
     }
 }

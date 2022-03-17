@@ -99,14 +99,65 @@
                                                     </userDefinedRuntimeAttribute>
                                                 </userDefinedRuntimeAttributes>
                                             </view>
+                                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Ehh-Wp-04k">
+                                                <rect key="frame" x="135" y="261" width="144" height="70"/>
+                                                <subviews>
+                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Title" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="r2y-Qs-q79">
+                                                        <rect key="frame" x="10" y="10" width="124" height="16"/>
+                                                        <constraints>
+                                                            <constraint firstAttribute="height" constant="16" id="7Na-ny-fUi"/>
+                                                        </constraints>
+                                                        <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="15"/>
+                                                        <nil key="textColor"/>
+                                                        <nil key="highlightedColor"/>
+                                                    </label>
+                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Subtitle" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="eqi-89-OFC">
+                                                        <rect key="frame" x="10" y="33" width="124" height="16"/>
+                                                        <fontDescription key="fontDescription" type="system" weight="medium" pointSize="13"/>
+                                                        <nil key="textColor"/>
+                                                        <nil key="highlightedColor"/>
+                                                    </label>
+                                                </subviews>
+                                                <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                                                <constraints>
+                                                    <constraint firstAttribute="bottom" relation="greaterThanOrEqual" secondItem="eqi-89-OFC" secondAttribute="bottom" constant="5" id="Ayi-Ic-6KX"/>
+                                                    <constraint firstItem="r2y-Qs-q79" firstAttribute="top" secondItem="Ehh-Wp-04k" secondAttribute="top" constant="10" id="MuE-gM-9W8"/>
+                                                    <constraint firstAttribute="trailing" secondItem="eqi-89-OFC" secondAttribute="trailing" constant="10" id="T01-W9-2XO"/>
+                                                    <constraint firstItem="eqi-89-OFC" firstAttribute="leading" secondItem="Ehh-Wp-04k" secondAttribute="leading" constant="10" id="cBH-Hh-BYj"/>
+                                                    <constraint firstAttribute="trailing" secondItem="r2y-Qs-q79" secondAttribute="trailing" constant="10" id="crt-7G-Y1U"/>
+                                                    <constraint firstAttribute="height" constant="70" id="hd8-KM-Pjn"/>
+                                                    <constraint firstItem="r2y-Qs-q79" firstAttribute="leading" secondItem="Ehh-Wp-04k" secondAttribute="leading" constant="10" id="jLq-Cy-VIC"/>
+                                                    <constraint firstItem="eqi-89-OFC" firstAttribute="top" secondItem="r2y-Qs-q79" secondAttribute="bottom" constant="7" id="xnQ-Tv-f9d"/>
+                                                </constraints>
+                                                <userDefinedRuntimeAttributes>
+                                                    <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
+                                                        <integer key="value" value="10"/>
+                                                    </userDefinedRuntimeAttribute>
+                                                </userDefinedRuntimeAttributes>
+                                            </view>
+                                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="mappin" catalog="system" translatesAutoresizingMaskIntoConstraints="NO" id="Gkc-IV-jsh">
+                                                <rect key="frame" x="187" y="338.5" width="40" height="40"/>
+                                                <color key="tintColor" systemColor="labelColor"/>
+                                                <constraints>
+                                                    <constraint firstAttribute="width" secondItem="Gkc-IV-jsh" secondAttribute="height" multiplier="1:1" id="VCw-vk-kC4"/>
+                                                    <constraint firstAttribute="width" constant="40" id="hlJ-lk-blg"/>
+                                                    <constraint firstAttribute="height" constant="40" id="n3U-ET-cvw"/>
+                                                </constraints>
+                                            </imageView>
                                         </subviews>
                                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                         <constraints>
+                                            <constraint firstItem="Gkc-IV-jsh" firstAttribute="top" secondItem="Ehh-Wp-04k" secondAttribute="bottom" constant="8" symbolic="YES" id="2IE-K4-9my"/>
+                                            <constraint firstItem="Ehh-Wp-04k" firstAttribute="leading" secondItem="hxu-qp-pG0" secondAttribute="leading" constant="135" id="2bo-1m-bjR"/>
+                                            <constraint firstItem="Ehh-Wp-04k" firstAttribute="centerX" secondItem="Gkc-IV-jsh" secondAttribute="centerX" id="4hD-tx-XQg"/>
                                             <constraint firstAttribute="trailing" secondItem="EYr-oS-QPI" secondAttribute="trailing" constant="8" id="55R-Tl-yVN"/>
                                             <constraint firstItem="MV8-rf-eje" firstAttribute="leading" secondItem="hxu-qp-pG0" secondAttribute="leading" id="AqM-oW-DlN"/>
                                             <constraint firstAttribute="trailing" secondItem="MV8-rf-eje" secondAttribute="trailing" id="FFD-tS-J5D"/>
                                             <constraint firstItem="EYr-oS-QPI" firstAttribute="top" secondItem="hxu-qp-pG0" secondAttribute="top" constant="8" id="Fd4-ui-fNv"/>
+                                            <constraint firstItem="Gkc-IV-jsh" firstAttribute="centerY" secondItem="MV8-rf-eje" secondAttribute="centerY" id="VNy-ru-LI3"/>
                                             <constraint firstAttribute="bottom" secondItem="MV8-rf-eje" secondAttribute="bottom" id="Xsv-g7-Nhw"/>
+                                            <constraint firstItem="Gkc-IV-jsh" firstAttribute="centerX" secondItem="hxu-qp-pG0" secondAttribute="centerX" id="bcn-EE-zUX"/>
+                                            <constraint firstAttribute="trailing" secondItem="Ehh-Wp-04k" secondAttribute="trailing" constant="135" id="fw2-t1-5Jj"/>
                                             <constraint firstItem="MV8-rf-eje" firstAttribute="top" secondItem="hxu-qp-pG0" secondAttribute="top" id="r20-yJ-ZIE"/>
                                             <constraint firstItem="EYr-oS-QPI" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="hxu-qp-pG0" secondAttribute="leading" constant="10" id="vP7-Yf-V05"/>
                                         </constraints>
@@ -134,8 +185,12 @@
                     <connections>
                         <outlet property="detailView" destination="O7b-NV-YsW" id="Xur-hg-O7D"/>
                         <outlet property="lblAddress" destination="Bva-F6-LiW" id="sUN-Li-NRA"/>
+                        <outlet property="lblPinSubtitle" destination="eqi-89-OFC" id="JC4-kw-B9g"/>
+                        <outlet property="lblPinTitle" destination="r2y-Qs-q79" id="6Ui-s6-Icy"/>
                         <outlet property="mapView" destination="MV8-rf-eje" id="ZPC-IB-6Ya"/>
+                        <outlet property="pin" destination="Gkc-IV-jsh" id="AkB-gg-Dh0"/>
                         <outlet property="searchBar" destination="pY3-d1-yFc" id="WGt-K2-c7m"/>
+                        <outlet property="titleSubtitleView" destination="Ehh-Wp-04k" id="DmB-5b-75L"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
@@ -165,6 +220,10 @@
     <resources>
         <image name="CurrentLocation" width="48" height="48"/>
         <image name="Search" width="48" height="48"/>
+        <image name="mappin" catalog="system" width="105" height="128"/>
+        <systemColor name="labelColor">
+            <color white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+        </systemColor>
         <systemColor name="systemBackgroundColor">
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
         </systemColor>
