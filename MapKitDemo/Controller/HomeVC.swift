@@ -24,40 +24,46 @@ class HomeVC: UIViewController {
     var isSerachBtnClicked = false
     var isPinTapped = false
     
+    var resultSearchController:UISearchController? = nil
+    var locationSearchBar: UISearchBar?
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         config()
+        searchBarConfig()
+    }
+    
+    private func searchBarConfig() {
+        let locationSearchTable = storyboard?.instantiateViewController(withIdentifier: "LocationSearchTable") as? LocationSearchTable
+        resultSearchController = UISearchController(searchResultsController: locationSearchTable)
+        resultSearchController!.searchResultsUpdater = locationSearchTable
+        locationSearchBar = resultSearchController!.searchBar
+        locationSearchBar?.sizeToFit()
+        locationSearchBar?.placeholder = "Search for places"
+        navigationItem.titleView = resultSearchController?.searchBar
+        resultSearchController?.hidesNavigationBarDuringPresentation = false
+        definesPresentationContext = true
+        locationSearchTable?.mapView = mapView
+        locationSearchTable?.delegate = self
     }
     
     private func config() {
-        self.detailView.isHidden = true
         self.titleSubtitleView.isHidden = true
-        self.searchBar.isHidden = true
         mapView.delegate = self
+        if ((lblAddress.text?.isEmpty) != nil){
+            self.lblAddress.isHidden = true
+        }
         //Map tap gesture
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(tapGestureAction))
         self.mapView.addGestureRecognizer(tapGesture)
         //Pin tap gesture
         pin.isUserInteractionEnabled = true
         pin.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(pinTapped)))
-        
         locationManager.delegate = self
         locationManager.desiredAccuracy = kCLLocationAccuracyBest
         locationManager.requestAlwaysAuthorization()
         if (CLLocationManager.locationServicesEnabled()){
             locationManager.startUpdatingLocation()
-        }
-    }
-    //MARK: Button Actions
-    @IBAction private func searchBtnAction() {
-        self.searchBar.delegate = self
-        self.isSerachBtnClicked = true
-        self.detailView.isHidden = false
-        self.searchBar.isHidden = false
-        if self.lblAddress.text!.isEmpty == false{
-            self.lblAddress.isHidden = true
-        }else {
-            self.lblAddress.isHidden = false
         }
     }
     
@@ -104,9 +110,8 @@ extension HomeVC: MKMapViewDelegate {
         let queue1 = DispatchQueue.global(qos: .background)
         queue1.async {
             self.getAddress(coordnates: center) { address in
-                self.detailView.isHidden = false
                 self.lblAddress.text = address.fullAddress
-                self.lblPinTitle.text = address.placeMark
+                self.lblPinTitle.text = address.name
                 self.lblPinSubtitle.text = address.city
             }
         }
@@ -132,30 +137,18 @@ extension HomeVC: CLLocationManagerDelegate {
 extension HomeVC {
     //MARK: Set Pin
     func setPinUsingMKPointAnnotation(location: CLLocationCoordinate2D){
-        self.detailView.isHidden = false
-        if isSerachBtnClicked{
-            self.searchBar.isHidden = false
-        }else {
-            self.searchBar.isHidden = true
-        }
         self.lblAddress.isHidden = false
         self.getAddress(coordnates: location) { address in
             self.lblAddress.text = address.fullAddress
-            self.lblPinTitle.text = address.placeMark
+            self.lblPinTitle.text = address.name
             self.lblPinSubtitle.text = address.city
-//            let annotation = MKPointAnnotation()
-//            annotation.coordinate = location
-//            annotation.title = address.placeMark
-//            annotation.subtitle = address.city
             let coordinateRegion = MKCoordinateRegion(center: location, latitudinalMeters: 800, longitudinalMeters: 800)
             self.mapView.setRegion(coordinateRegion, animated: true)
-            //self.mapView.addAnnotation(annotation)
         }
     }
 }
-//MARK: SearchBar
-extension HomeVC: UISearchBarDelegate {
-    
+
+extension HomeVC: HandleSearchProtocol {
     private func searchBaseOn(name: String) {
         let localSearchRequest = MKLocalSearch.Request()
         localSearchRequest.naturalLanguageQuery = name
@@ -167,20 +160,8 @@ extension HomeVC: UISearchBarDelegate {
             self?.setPinUsingMKPointAnnotation(location: coordinate)
         }
     }
-    
-    func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
-        guard let searchedText = searchBar.text else {return}
-        searchBar.resignFirstResponder()
-        self.searchBaseOn(name: searchedText)
-    }
-    
-    func searchBarShouldBeginEditing(_ searchBar: UISearchBar) -> Bool {
-        self.mapView.isUserInteractionEnabled = false
-        return true
-    }
-    
-    func searchBarShouldEndEditing(_ searchBar: UISearchBar) -> Bool {
-        self.mapView.isUserInteractionEnabled = true
-        return true
+    func searchedData(data: String) {
+        self.searchBaseOn(name: data)
+        self.locationSearchBar?.text = data
     }
 }

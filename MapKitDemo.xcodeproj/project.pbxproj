@@ -15,6 +15,7 @@
 		84A5169827DB42DE00BF0E0F /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 84A5169727DB42DE00BF0E0F /* Assets.xcassets */; };
 		84A5169B27DB42DE00BF0E0F /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 84A5169927DB42DE00BF0E0F /* LaunchScreen.storyboard */; };
 		84A516A727DB5C6C00BF0E0F /* CustomPin.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84A516A627DB5C6C00BF0E0F /* CustomPin.swift */; };
+		84F5E7A327E84A100024475F /* LocationSearchTable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84F5E7A227E84A100024475F /* LocationSearchTable.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -28,6 +29,7 @@
 		84A5169A27DB42DE00BF0E0F /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		84A5169C27DB42DE00BF0E0F /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		84A516A627DB5C6C00BF0E0F /* CustomPin.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomPin.swift; sourceTree = "<group>"; };
+		84F5E7A227E84A100024475F /* LocationSearchTable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationSearchTable.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -92,6 +94,7 @@
 			isa = PBXGroup;
 			children = (
 				84A5169227DB42DC00BF0E0F /* HomeVC.swift */,
+				84F5E7A227E84A100024475F /* LocationSearchTable.swift */,
 			);
 			path = Controller;
 			sourceTree = "<group>";
@@ -179,6 +182,7 @@
 				84A516A727DB5C6C00BF0E0F /* CustomPin.swift in Sources */,
 				84A5169327DB42DC00BF0E0F /* HomeVC.swift in Sources */,
 				84A5168F27DB42DC00BF0E0F /* AppDelegate.swift in Sources */,
+				84F5E7A327E84A100024475F /* LocationSearchTable.swift in Sources */,
 				84A5169127DB42DC00BF0E0F /* SceneDelegate.swift in Sources */,
 				848C881627E1B1FB00F75DCC /* Address.swift in Sources */,
 			);

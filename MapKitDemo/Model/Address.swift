@@ -8,13 +8,13 @@
 import Foundation
 
 struct Address {
-    let placeMark: String
+    let name: String
     let country: String
     let city: String
     let zipCode: String
     let fullAddress: String
     init(placeMark: String, country: String, city: String, zipCode: String) {
-        self.placeMark = placeMark
+        self.name = placeMark
         self.country = country
         self.city = city
         self.zipCode = zipCode
