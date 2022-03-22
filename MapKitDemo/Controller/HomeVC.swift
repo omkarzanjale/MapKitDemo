@@ -8,43 +8,24 @@
 import UIKit
 import MapKit
 import CoreLocation
-
+import GooglePlaces
 class HomeVC: UIViewController {
     
     @IBOutlet weak var mapView: MKMapView!
     @IBOutlet weak var lblAddress: UILabel!
-    @IBOutlet weak var detailView: UIView!
     @IBOutlet weak var titleSubtitleView: UIView!
     @IBOutlet weak var pin: UIImageView!
     @IBOutlet weak var lblPinTitle: UILabel!
     @IBOutlet weak var lblPinSubtitle: UILabel!
-    @IBOutlet weak var searchBar: UISearchBar!
     lazy var locationManager = CLLocationManager()
     lazy var currentLocation = CLLocationCoordinate2D()
+    lazy var autoCompleteController = GMSAutocompleteViewController()
     var isSerachBtnClicked = false
     var isPinTapped = false
-    
-    var resultSearchController:UISearchController? = nil
-    var locationSearchBar: UISearchBar?
-    
+        
     override func viewDidLoad() {
         super.viewDidLoad()
         config()
-        searchBarConfig()
-    }
-    
-    private func searchBarConfig() {
-        let locationSearchTable = storyboard?.instantiateViewController(withIdentifier: "LocationSearchTable") as? LocationSearchTable
-        resultSearchController = UISearchController(searchResultsController: locationSearchTable)
-        resultSearchController!.searchResultsUpdater = locationSearchTable
-        locationSearchBar = resultSearchController!.searchBar
-        locationSearchBar?.sizeToFit()
-        locationSearchBar?.placeholder = "Search for places"
-        navigationItem.titleView = resultSearchController?.searchBar
-        resultSearchController?.hidesNavigationBarDuringPresentation = false
-        definesPresentationContext = true
-        locationSearchTable?.mapView = mapView
-        locationSearchTable?.delegate = self
     }
     
     private func config() {
@@ -65,6 +46,20 @@ class HomeVC: UIViewController {
         if (CLLocationManager.locationServicesEnabled()){
             locationManager.startUpdatingLocation()
         }
+    }
+    //
+    //MARK: Search Btn
+    //
+    @IBAction func searchBtnAction(_ sender: Any) {
+        autoCompleteController.delegate = self
+        let fields = GMSPlaceField(rawValue: UInt(GMSPlaceField.name.rawValue) | UInt(GMSPlaceField.placeID.rawValue))
+        autoCompleteController.placeFields = fields
+        
+        let filter = GMSAutocompleteFilter()
+        filter.type = .noFilter
+        autoCompleteController.autocompleteFilter = filter
+        
+        present(autoCompleteController, animated: true)
     }
     
     @IBAction func currentLocBtnAction(_ sender: Any) {
@@ -116,10 +111,6 @@ extension HomeVC: MKMapViewDelegate {
             }
         }
     }
-    
-    func mapView(_ mapView: MKMapView, didSelect view: MKAnnotationView) {
-        print("Pin selected")
-    }
 }
 
 extension HomeVC: CLLocationManagerDelegate {
@@ -146,9 +137,7 @@ extension HomeVC {
             self.mapView.setRegion(coordinateRegion, animated: true)
         }
     }
-}
-
-extension HomeVC: HandleSearchProtocol {
+    
     private func searchBaseOn(name: String) {
         let localSearchRequest = MKLocalSearch.Request()
         localSearchRequest.naturalLanguageQuery = name
@@ -160,8 +149,21 @@ extension HomeVC: HandleSearchProtocol {
             self?.setPinUsingMKPointAnnotation(location: coordinate)
         }
     }
-    func searchedData(data: String) {
-        self.searchBaseOn(name: data)
-        self.locationSearchBar?.text = data
+}
+//
+//MARK: GMSAutocompleteViewControllerDelegate
+//
+extension HomeVC: GMSAutocompleteViewControllerDelegate{
+    func viewController(_ viewController: GMSAutocompleteViewController, didAutocompleteWith place: GMSPlace) {
+        self.searchBaseOn(name: place.name ?? "")
+        dismiss(animated: true)
+    }
+    
+    func viewController(_ viewController: GMSAutocompleteViewController, didFailAutocompleteWithError error: Error) {
+        print(error.localizedDescription)
+    }
+    
+    func wasCancelled(_ viewController: GMSAutocompleteViewController) {
+        dismiss(animated: true)
     }
 }

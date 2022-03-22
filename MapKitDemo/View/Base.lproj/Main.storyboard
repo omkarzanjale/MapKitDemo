@@ -148,7 +148,13 @@
                             <constraint firstItem="gi5-N3-FTu" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" id="y6q-Cm-Mcv"/>
                         </constraints>
                     </view>
-                    <navigationItem key="navigationItem" id="eVa-C7-6lQ"/>
+                    <navigationItem key="navigationItem" id="eVa-C7-6lQ">
+                        <barButtonItem key="rightBarButtonItem" image="Search" id="sNb-7L-l6g">
+                            <connections>
+                                <action selector="searchBtnAction:" destination="BYZ-38-t0r" id="Az2-aW-THy"/>
+                            </connections>
+                        </barButtonItem>
+                    </navigationItem>
                     <connections>
                         <outlet property="lblAddress" destination="Bva-F6-LiW" id="sUN-Li-NRA"/>
                         <outlet property="lblPinSubtitle" destination="eqi-89-OFC" id="JC4-kw-B9g"/>
@@ -161,50 +167,6 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="897.10144927536237" y="49.553571428571423"/>
-        </scene>
-        <!--Location Search Table-->
-        <scene sceneID="OdT-qe-ySD">
-            <objects>
-                <tableViewController storyboardIdentifier="LocationSearchTable" id="2Sp-fq-2Ub" customClass="LocationSearchTable" customModule="MapKitDemo" customModuleProvider="target" sceneMemberID="viewController">
-                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="-1" estimatedSectionHeaderHeight="-1" sectionFooterHeight="-1" estimatedSectionFooterHeight="-1" id="9vF-fj-0Fs">
-                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
-                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
-                        <prototypes>
-                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="Cell" textLabel="iW5-t1-53C" detailTextLabel="gOf-Go-CaH" rowHeight="125" style="IBUITableViewCellStyleSubtitle" id="Lhw-Ui-HD3">
-                                <rect key="frame" x="0.0" y="44.5" width="414" height="125"/>
-                                <autoresizingMask key="autoresizingMask"/>
-                                <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="Lhw-Ui-HD3" id="l34-V3-ItI">
-                                    <rect key="frame" x="0.0" y="0.0" width="414" height="125"/>
-                                    <autoresizingMask key="autoresizingMask"/>
-                                    <subviews>
-                                        <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" insetsLayoutMarginsFromSafeArea="NO" text="Title" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="iW5-t1-53C">
-                                            <rect key="frame" x="20" y="47" width="25" height="14.5"/>
-                                            <autoresizingMask key="autoresizingMask"/>
-                                            <fontDescription key="fontDescription" type="system" pointSize="0.0"/>
-                                            <nil key="textColor"/>
-                                            <nil key="highlightedColor"/>
-                                        </label>
-                                        <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" insetsLayoutMarginsFromSafeArea="NO" text="Subtitle" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="gOf-Go-CaH">
-                                            <rect key="frame" x="20" y="63.5" width="40.5" height="13.5"/>
-                                            <autoresizingMask key="autoresizingMask"/>
-                                            <fontDescription key="fontDescription" type="system" pointSize="11"/>
-                                            <nil key="textColor"/>
-                                            <nil key="highlightedColor"/>
-                                        </label>
-                                    </subviews>
-                                </tableViewCellContentView>
-                            </tableViewCell>
-                        </prototypes>
-                        <connections>
-                            <outlet property="dataSource" destination="2Sp-fq-2Ub" id="WEP-07-y1d"/>
-                            <outlet property="delegate" destination="2Sp-fq-2Ub" id="JrB-S3-SBW"/>
-                        </connections>
-                    </tableView>
-                </tableViewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="5B1-RU-trQ" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="1660.8695652173915" y="40.848214285714285"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="d0S-rw-mcY">
@@ -228,6 +190,7 @@
     </scenes>
     <resources>
         <image name="CurrentLocation" width="48" height="48"/>
+        <image name="Search" width="48" height="48"/>
         <image name="mappin" catalog="system" width="105" height="128"/>
         <systemColor name="labelColor">
             <color white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
