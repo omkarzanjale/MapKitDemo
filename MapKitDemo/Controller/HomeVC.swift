@@ -22,7 +22,7 @@ class HomeVC: UIViewController {
     lazy var autoCompleteController = GMSAutocompleteViewController()
     var isSerachBtnClicked = false
     var isPinTapped = false
-        
+
     override func viewDidLoad() {
         super.viewDidLoad()
         config()
