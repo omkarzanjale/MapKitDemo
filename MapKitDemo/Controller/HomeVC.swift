@@ -11,103 +11,176 @@ import CoreLocation
 
 class HomeVC: UIViewController {
     
-    @IBOutlet weak var lblAddress: UILabel!
     @IBOutlet weak var mapView: MKMapView!
-    @IBOutlet weak var addressView: UIView!
-
+    @IBOutlet weak var lblAddress: UILabel!
+    @IBOutlet weak var detailView: UIView!
+    @IBOutlet weak var titleSubtitleView: UIView!
+    @IBOutlet weak var pin: UIImageView!
+    @IBOutlet weak var lblPinTitle: UILabel!
+    @IBOutlet weak var lblPinSubtitle: UILabel!
+    @IBOutlet weak var searchBar: UISearchBar!
+    lazy var locationManager = CLLocationManager()
+    lazy var currentLocation = CLLocationCoordinate2D()
+    var isSerachBtnClicked = false
+    var isPinTapped = false
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.addressView.isHidden = true
+        config()
+    }
+    
+    private func config() {
+        self.detailView.isHidden = true
+        self.titleSubtitleView.isHidden = true
+        self.searchBar.isHidden = true
+        mapView.delegate = self
+        //Map tap gesture
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(tapGestureAction))
         self.mapView.addGestureRecognizer(tapGesture)
+        //Pin tap gesture
+        pin.isUserInteractionEnabled = true
+        pin.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(pinTapped)))
+        
+        locationManager.delegate = self
+        locationManager.desiredAccuracy = kCLLocationAccuracyBest
+        locationManager.requestAlwaysAuthorization()
+        if (CLLocationManager.locationServicesEnabled()){
+            locationManager.startUpdatingLocation()
+        }
+    }
+    //MARK: Button Actions
+    @IBAction private func searchBtnAction() {
+        self.searchBar.delegate = self
+        self.isSerachBtnClicked = true
+        self.detailView.isHidden = false
+        self.searchBar.isHidden = false
+        if self.lblAddress.text!.isEmpty == false{
+            self.lblAddress.isHidden = true
+        }else {
+            self.lblAddress.isHidden = false
+        }
     }
     
-    @IBAction func closeViewBtnAction(_ sender: Any) {
-        self.addressView.isHidden = true
+    @IBAction func currentLocBtnAction(_ sender: Any) {
+        self.setPinUsingMKPointAnnotation(location: self.currentLocation)
     }
     
-    private func getAddress(coordnates: CLLocationCoordinate2D) {
+    @objc func tapGestureAction(sender: UIGestureRecognizer) {
+        self.isSerachBtnClicked = false
+        let locFromTap = sender.location(in: mapView)
+        let coordinatesOnMap = mapView.convert(locFromTap, toCoordinateFrom: mapView)
+        self.setPinUsingMKPointAnnotation(location: coordinatesOnMap)
+    }
+    
+    @objc private func pinTapped(_ recognizer: UITapGestureRecognizer) {
+        self.isPinTapped = !isPinTapped
+        if isPinTapped {
+            self.titleSubtitleView.isHidden = false
+        }else {
+            self.titleSubtitleView.isHidden = true
+        }
+    }
+    //
+    //MARK: Get Address
+    //
+    private func getAddress(coordnates: CLLocationCoordinate2D, complisherHandler:@escaping(Address)->()  ) {
         let geoCoder = CLGeocoder()
         let location = CLLocation(latitude: coordnates.latitude, longitude: coordnates.longitude)
         geoCoder.reverseGeocodeLocation(location, completionHandler:
                                             { placemarks, error -> Void in
             guard let placeMark = placemarks?.first else { return }
-            //guard let locationName = placeMark.location  else {return}
-            //guard let street = placeMark.thoroughfare else {return}
-            guard let city = placeMark.subAdministrativeArea  else {return}
-            guard let zip = placeMark.isoCountryCode else {return}
-            guard let country = placeMark.country  else {return}
-            DispatchQueue.main.async {
-                self.lblAddress.text = "Placemark: \(placeMark.name ?? "No Name"), City: \(city), Country: \(country), Zip Code: \(zip)"
-            }
+            let address = Address(placeMark: placeMark.name ?? "-", country: placeMark.country ?? "-", city: placeMark.subAdministrativeArea ?? "-", zipCode: placeMark.isoCountryCode ?? "-")
+            complisherHandler(address)
         })
-    }
-    
-    @objc func tapGestureAction(sender: UIGestureRecognizer) {
-        self.addressView.isHidden = false
-       
-        if mapView.annotations.isEmpty == false {
-            self.mapView.removeAnnotation(mapView.annotations[0])
-        }
-        print("Tapped")
-        let locFromTap = sender.location(in: mapView)
-        let coordinatesOnMap = mapView.convert(locFromTap, toCoordinateFrom: mapView)
-        self.getAddress(coordnates: coordinatesOnMap)
-        setPinUsingMKPointAnnotation(location: coordinatesOnMap)
-    }
-    
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
     }
 }
 //
 //MARK: MKMapViewDelegate
 //
 extension HomeVC: MKMapViewDelegate {
-    func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView? {
-        if annotation is MKUserLocation { return nil }
-        let annotationView = MKAnnotationView(annotation: annotation, reuseIdentifier: "CustomAnnootation")
-        annotationView.image = UIImage(named: "Pin")
-        annotationView.canShowCallout = true
-        return annotationView
+
+    func mapView(_ mapView: MKMapView, regionDidChangeAnimated animated: Bool) {
+        let center = mapView.centerCoordinate
+        let queue1 = DispatchQueue.global(qos: .background)
+        queue1.async {
+            self.getAddress(coordnates: center) { address in
+                self.detailView.isHidden = false
+                self.lblAddress.text = address.fullAddress
+                self.lblPinTitle.text = address.placeMark
+                self.lblPinSubtitle.text = address.city
+            }
+        }
     }
     
     func mapView(_ mapView: MKMapView, didSelect view: MKAnnotationView) {
         print("Pin selected")
     }
-    
 }
-//
-//MARK: CLLocationManagerDelegate
-//
+
 extension HomeVC: CLLocationManagerDelegate {
-    func mapView(_ mapView: MKMapView, regionDidChangeAnimated animated: Bool) {
-        print("Region change")
-        let northEast = mapView.convert(CGPoint(x: mapView.bounds.width, y: 0), toCoordinateFrom: mapView)
-        let southWest = mapView.convert(CGPoint(x: 0, y: mapView.bounds.height), toCoordinateFrom: mapView)
-        print(southWest)
-        print(northEast)
+    //
+    //MARK: Get current Location
+    //
+    func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
+        if let location = locations.last{
+            let center = CLLocationCoordinate2D(latitude: location.coordinate.latitude, longitude: location.coordinate.longitude)
+            self.currentLocation = center
+        }
     }
 }
 
 extension HomeVC {
-    //Add pin using MKPlacemark
-    func setPinUsingMKPlacemark(location: CLLocationCoordinate2D) {
-        let pin = MKPlacemark(coordinate: location)
-        let coordinateRegion = MKCoordinateRegion(center: pin.coordinate, latitudinalMeters: 8000, longitudinalMeters: 8000)
-        mapView.addAnnotation(pin)
-        mapView.setRegion(coordinateRegion, animated: true)
+    //MARK: Set Pin
+    func setPinUsingMKPointAnnotation(location: CLLocationCoordinate2D){
+        self.detailView.isHidden = false
+        if isSerachBtnClicked{
+            self.searchBar.isHidden = false
+        }else {
+            self.searchBar.isHidden = true
+        }
+        self.lblAddress.isHidden = false
+        self.getAddress(coordnates: location) { address in
+            self.lblAddress.text = address.fullAddress
+            self.lblPinTitle.text = address.placeMark
+            self.lblPinSubtitle.text = address.city
+//            let annotation = MKPointAnnotation()
+//            annotation.coordinate = location
+//            annotation.title = address.placeMark
+//            annotation.subtitle = address.city
+            let coordinateRegion = MKCoordinateRegion(center: location, latitudinalMeters: 800, longitudinalMeters: 800)
+            self.mapView.setRegion(coordinateRegion, animated: true)
+            //self.mapView.addAnnotation(annotation)
+        }
+    }
+}
+//MARK: SearchBar
+extension HomeVC: UISearchBarDelegate {
+    
+    private func searchBaseOn(name: String) {
+        let localSearchRequest = MKLocalSearch.Request()
+        localSearchRequest.naturalLanguageQuery = name
+        let localSearch = MKLocalSearch(request: localSearchRequest)
+        localSearch.start { [weak self] response, error in
+            guard error == nil else {return}
+            guard let response = response else {return}
+            let coordinate = CLLocationCoordinate2D(latitude: response.boundingRegion.center.latitude, longitude: response.boundingRegion.center.longitude)
+            self?.setPinUsingMKPointAnnotation(location: coordinate)
+        }
     }
     
-    //Add pin using MKPointAnnotation
-    func setPinUsingMKPointAnnotation(location: CLLocationCoordinate2D){
-        let annotation = MKPointAnnotation()
-        annotation.coordinate = location
-        annotation.title = "Title"
-        annotation.subtitle = "SubTitle"
-        let coordinateRegion = MKCoordinateRegion(center: annotation.coordinate, latitudinalMeters: 10000, longitudinalMeters: 10000)
-        mapView.setRegion(coordinateRegion, animated: true)
-        mapView.addAnnotation(annotation)
+    func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
+        guard let searchedText = searchBar.text else {return}
+        searchBar.resignFirstResponder()
+        self.searchBaseOn(name: searchedText)
+    }
+    
+    func searchBarShouldBeginEditing(_ searchBar: UISearchBar) -> Bool {
+        self.mapView.isUserInteractionEnabled = false
+        return true
+    }
+    
+    func searchBarShouldEndEditing(_ searchBar: UISearchBar) -> Bool {
+        self.mapView.isUserInteractionEnabled = true
+        return true
     }
 }

@@ -2,8 +2,14 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
+	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+	<string>Allow user in background and in use</string>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>Allow user when app is in use</string>
 	<key>UIApplicationSceneManifest</key>
 	<dict>
+		<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+		<string>Allow user</string>
 		<key>UIApplicationSupportsMultipleScenes</key>
 		<false/>
 		<key>UISceneConfigurations</key>
